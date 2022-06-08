@@ -3,11 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout-land/activity_detail.xml" value="0.1" />
         <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/activity_detail.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/activity_favourite.xml" value="0.20516304347826086" />
         <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/movie_info.xml" value="0.2006340579710145" />
         <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/movie_item.xml" value="0.20516304347826086" />
         <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/review_item.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/layout/trailer_activity.xml" value="0.20516304347826086" />
         <entry key="..\:/Users/barsa/AndroidStudioProjects/Mymovies/app/src/main/res/menu/main_menu.xml" value="0.27447916666666666" />
       </map>
     </option>

@@ -1,11 +1,13 @@
 package com.example.mymovies.data;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "movies")
 public class Movie {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    int uniqueId;
     int id;
     int voteCount;
     double voteAverage;
@@ -17,8 +19,10 @@ public class Movie {
     String backdropPath;
     String originalTitle;
 
-    public Movie(int id, int voteCount, double voteAverage, String title, String overView, String bigPosterPath , String posterPath,
-                 String releaseDate, String backdropPath, String originalTitle) {
+    public Movie(int uniqueId, int id, int voteCount, double voteAverage, String title, String overView,
+                 String bigPosterPath , String posterPath, String releaseDate, String backdropPath, String originalTitle) {
+
+        this.uniqueId = uniqueId;
         this.id = id;
         this.voteCount = voteCount;
         this.voteAverage = voteAverage;
@@ -29,6 +33,31 @@ public class Movie {
         this.releaseDate = releaseDate;
         this.backdropPath = backdropPath;
         this.originalTitle = originalTitle;
+    }
+
+
+    @Ignore
+    public Movie( int id, int voteCount, double voteAverage, String title, String overView,
+                 String bigPosterPath , String posterPath, String releaseDate, String backdropPath, String originalTitle) {
+
+        this.id = id;
+        this.voteCount = voteCount;
+        this.voteAverage = voteAverage;
+        this.title = title;
+        this.overView = overView;
+        this.posterPath = posterPath;
+        this.bigPosterPath = bigPosterPath;
+        this.releaseDate = releaseDate;
+        this.backdropPath = backdropPath;
+        this.originalTitle = originalTitle;
+    }
+
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public String getBigPosterPath() {

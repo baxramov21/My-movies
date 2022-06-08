@@ -1,4 +1,4 @@
-package com.example.mymovies;
+package com.example.mymovies.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mymovies.R;
 import com.example.mymovies.data.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -20,12 +21,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
     private OnPosterClick onPosterClickListener;
     private OnReachEndListener onReachEndListener;
 
-
     public MovieAdapter() {
         movies = new ArrayList<>();
     }
 
-    interface OnPosterClick {
+    public interface OnPosterClick {
         void onPosterClick(int position);
     }
 
@@ -33,7 +33,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
         this.onPosterClickListener = onPosterClickListener;
     }
 
-    interface OnReachEndListener {
+    public interface OnReachEndListener {
         void onReachEnd();
     }
 
@@ -50,11 +50,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
-        if (position > movies.size() - 4 && onReachEndListener != null) {
+        if (movies.size() >= 20 && position > movies.size() - 4 && onReachEndListener != null) {
             onReachEndListener.onReachEnd();
         }
         Movie movie = movies.get(position);
         Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
+    }
+
+    public void clear() {
+        this.movies.clear();
+        notifyDataSetChanged();
     }
 
     @Override

@@ -15,20 +15,21 @@ import java.util.ArrayList;
 public class JSONUtils {
 
 
-    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
-
     private static final String BASE_POSTER_URL = "https://image.tmdb.org/t/p/";
     private static final String SMALL_POSTER_SIZE = "w185";
     private static final String BIG_POSTER_SIZE = "w780";
 
-    // For rating
+
     private static final String KEY_RESULTS = "results";
+
+    // For reviews
     private static final String KEY_AUTHOR = "author";
     private static final String KEY_CONTENT = "content";
 
     // For movie video
     private static final String KEY_VIDEO_KEY = "key";
     private static final String KEY_NAME = "name";
+    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
     // For movie info
     private static final String KEY_ID = "id";
@@ -42,52 +43,51 @@ public class JSONUtils {
     private static final String KEY_ORIGINAL_TITLE = "original_title";
 
     public static ArrayList<Reviews> getReviewsFromJSON(JSONObject jsonObject) {
-        ArrayList<Reviews> reviewsList = null;
+        ArrayList<Reviews> reviewsArrayList = null;
         if (jsonObject == null) {
             return null;
         }
-        JSONArray reviewsJSONArray = null;
         try {
-            reviewsList = new ArrayList<>();
-            reviewsJSONArray = jsonObject.getJSONArray(KEY_RESULTS);
+            JSONArray reviewsJSONArray = jsonObject.getJSONArray(KEY_RESULTS);
             for (int i = 0; i < reviewsJSONArray.length(); i++) {
-                JSONObject movieJSON = reviewsJSONArray.getJSONObject(i);
-                String author = movieJSON.getString(KEY_AUTHOR);
-                String reviewContent = movieJSON.getString(KEY_CONTENT);
+                JSONObject currentReviewFromJSON = reviewsJSONArray.getJSONObject(i);
+                String author = currentReviewFromJSON.getString(KEY_AUTHOR);
+                String reviewContent = currentReviewFromJSON.getString(KEY_CONTENT);
                 Reviews review = new Reviews(author, reviewContent);
-                reviewsList.add(review);
+                reviewsArrayList.add(review);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return reviewsList;
+        return reviewsArrayList;
     }
 
-    public static ArrayList<Trailer> getVideoFromJSON(JSONObject jsonObject) {
-        ArrayList<Trailer> reviewsList = null;
+    public static ArrayList<Trailer> getTrailersFromJSON(JSONObject jsonObject) {
+        ArrayList<Trailer> trailerArrayList = null;
         if (jsonObject == null) {
             return null;
         }
-        JSONArray reviewsJSONArray = null;
         try {
-            reviewsList = new ArrayList<>();
-            reviewsJSONArray = jsonObject.getJSONArray(KEY_RESULTS);
+            trailerArrayList = new ArrayList<>();
+            JSONArray reviewsJSONArray = jsonObject.getJSONArray(KEY_RESULTS);
             for (int i = 0; i < reviewsJSONArray.length(); i++) {
-                JSONObject movieJSON = reviewsJSONArray.getJSONObject(i);
-                String movieName = movieJSON.getString(KEY_NAME);
-                String video_key = BASE_YOUTUBE_URL +  movieJSON.getString(KEY_VIDEO_KEY);
-                Trailer review = new Trailer(movieName, video_key);
-                reviewsList.add(review);
+                JSONObject currentTrailerFromJSON = reviewsJSONArray.getJSONObject(i);
+                String key = BASE_YOUTUBE_URL + currentTrailerFromJSON.getString(KEY_VIDEO_KEY);
+                String video_name = currentTrailerFromJSON.getString(KEY_NAME);
+                Trailer trailer = new Trailer(video_name,key);
+                trailerArrayList.add(trailer);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return reviewsList;
+        return trailerArrayList;
     }
+
 
     public static ArrayList<Movie> getAllMoviesFromJSON(JSONObject jsonObject) {
         ArrayList<Movie> moviesList = null;
         if (jsonObject == null) {
+            Log.e("Main","JSON object to getAllMoviesFromJSON is null");
             return null;
         }
 
@@ -112,7 +112,7 @@ public class JSONUtils {
                 moviesList.add(currentMovie);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+           Log.e("Main","JSON exception in JSON utils " + e);
         }
         return moviesList;
     }
