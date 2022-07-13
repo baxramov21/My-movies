@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/scrollViewInfo"
-    tools:context=".DetailActivity">
+    tools:context=".screens.DetailActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -32,6 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageViewBigPoster"
             app:srcCompat="@android:drawable/btn_star_big_on" />
+
 
         <include
             android:id="@+id/movie_info"

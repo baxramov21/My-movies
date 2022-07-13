@@ -1,4 +1,4 @@
-package com.example.mymovies;
+package com.example.mymovies.screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.mymovies.R;
 import com.example.mymovies.adapter.MovieAdapter;
 import com.example.mymovies.data.FavouriteMovie;
 import com.example.mymovies.data.Movie;

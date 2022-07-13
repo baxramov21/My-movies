@@ -1,4 +1,4 @@
-package com.example.mymovies;
+package com.example.mymovies.screens;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -23,8 +22,8 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.mymovies.R;
 import com.example.mymovies.adapter.MovieAdapter;
 import com.example.mymovies.data.Movie;
 import com.example.mymovies.data.MovieViewModel;
@@ -33,7 +32,6 @@ import com.example.mymovies.utils.NetworkUtils;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
-
     }
 
     private int getWindowWidth() {
@@ -195,17 +192,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (page == 1) {
                 viewModel.deleteAll();
                 movieAdapter.clear();
-
             }
             for (Movie movie :
                     movies) {
                 viewModel.insertMovie(movie);
             }
-            progressBarLoading.setVisibility(View.INVISIBLE);
             movieAdapter.addMovies(movies);
             page++;
-            isLoading = false;
         }
+        isLoading = false;
+        progressBarLoading.setVisibility(View.INVISIBLE);
         loaderManager.destroyLoader(LOADER_ID);
     }
 

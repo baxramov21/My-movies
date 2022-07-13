@@ -54,11 +54,9 @@ public class MovieViewModel extends AndroidViewModel {
         new DeleteAllMoviesTask().execute();
     }
 
-
     public void insertMovie(Movie movie) {
         new InsertMovieTask().execute(movie);
     }
-
 
     public void deleteMovie(Movie movie) {
         new DeleteMovieTask().execute(movie);
@@ -68,11 +66,9 @@ public class MovieViewModel extends AndroidViewModel {
         return movies;
     }
 
-
     public void insertFavouriteMovie(FavouriteMovie movie) {
         new InsertFavouriteMovieTask().execute(movie);
     }
-
 
     public void deleteFavouriteMovie(FavouriteMovie movie) {
         new DeleteFavouriteMovieTask().execute(movie);

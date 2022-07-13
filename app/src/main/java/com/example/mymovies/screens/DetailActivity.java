@@ -1,4 +1,4 @@
-package com.example.mymovies;
+package com.example.mymovies.screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,13 +18,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mymovies.adapter.ReviewAdapter;
+import com.example.mymovies.R;
 import com.example.mymovies.adapter.TrailerAdapter;
 import com.example.mymovies.data.FavouriteMovie;
 import com.example.mymovies.data.Movie;
 
 import com.example.mymovies.data.MovieViewModel;
-import com.example.mymovies.data.Reviews;
 import com.example.mymovies.data.Trailer;
 import com.example.mymovies.utils.JSONUtils;
 import com.example.mymovies.utils.NetworkUtils;
@@ -83,15 +82,18 @@ public class DetailActivity extends AppCompatActivity {
         recyclerViewTrailers = findViewById(R.id.recycler_view_trailers);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
-        TrailerAdapter trailerAdapter = new TrailerAdapter();
-        recyclerViewTrailers.setAdapter(trailerAdapter);
-        trailerAdapter.setOnClickPlayVideo(url -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-        });
         JSONObject jsonObjectForVideos = NetworkUtils.getJSONObjectForVideos(currentMovie.getId(),lang);
         ArrayList<Trailer> trailers = JSONUtils.getTrailersFromJSON(jsonObjectForVideos);
-        trailerAdapter.setTrailers(trailers);
+        if (trailers != null) {
+            TrailerAdapter trailerAdapter = new TrailerAdapter();
+            recyclerViewTrailers.setAdapter(trailerAdapter);
+            trailerAdapter.setTrailers(trailers);
+
+            trailerAdapter.setOnClickPlayVideo(url -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            });
+        }
         scrollViewInfo.smoothScrollTo(0,0);
     }
 
