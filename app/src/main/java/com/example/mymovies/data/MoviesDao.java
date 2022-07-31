@@ -5,36 +5,36 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-
+import com.example.mymovies.pojos.Movie;
 import java.util.List;
 
-@Dao
-public interface MoviesDao {
 
-    @Query("SELECT * FROM movies")
-    LiveData<List<Movie>> getAllMovies();
+    @Dao
+     interface MoviesDao {
+        @Query("SELECT * FROM list_of_movies")
+        LiveData<List<Movie>> getAllMovies();
 
-    @Query("SELECT * FROM movies WHERE id == :movieID ")
-    Movie getMovieByID(int movieID);
+        @Query("SELECT * FROM favourite_movies")
+        LiveData<List<FavouriteMovie>> getAllFavouriteMovies();
 
-    @Query("DELETE FROM movies")
-    void deleteAllMovies();
+        @Query("SELECT * FROM list_of_movies WHERE id == :movieId")
+        Movie getMovieById(int movieId);
 
-    @Insert
-    void addMovie(Movie movie);
+        @Query("SELECT * FROM favourite_movies WHERE id == :movieId")
+        FavouriteMovie getFavouriteMovieById(int movieId);
 
-    @Delete
-    void deleteMovie(Movie movie);
+        @Query("DELETE FROM list_of_movies")
+        void deleteAllMovies();
 
-    @Query("SELECT * FROM favourite_movies")
-    LiveData<List<FavouriteMovie>> getAllFavouriteMovies();
+        @Insert
+        void insertMovie(Movie movie);
 
-    @Insert
-    void addFavouriteMovie(FavouriteMovie movie);
+        @Delete
+        void deleteMovie(Movie movie);
 
-    @Delete
-    void deleteFavouriteMovie(FavouriteMovie movie);
+        @Insert
+        void insertFavouriteMovie(FavouriteMovie movie);
 
-    @Query("SELECT * FROM favourite_movies WHERE id == :favourite_movieId ")
-    FavouriteMovie getFavouriteMovieByID(int favourite_movieId);
-}
+        @Delete
+        void deleteFavouriteMovie(FavouriteMovie movie);
+    }

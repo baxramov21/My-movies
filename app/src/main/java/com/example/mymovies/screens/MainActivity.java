@@ -1,13 +1,11 @@
 package com.example.mymovies.screens;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,21 +20,28 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mymovies.R;
 import com.example.mymovies.adapter.MovieAdapter;
-import com.example.mymovies.data.Movie;
+import com.example.mymovies.api.ApiFactory;
+import com.example.mymovies.api.ApiService;
+import com.example.mymovies.pojos.Movie;
 import com.example.mymovies.data.MovieViewModel;
-import com.example.mymovies.utils.JSONUtils;
+import com.example.mymovies.pojos.MoviesResult;
 import com.example.mymovies.utils.NetworkUtils;
 
-import org.json.JSONObject;
-
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
@@ -46,11 +51,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private MovieViewModel viewModel;
     private ProgressBar progressBarLoading;
 
+    private CompositeDisposable compositeDisposable;
+
     private static final int LOADER_ID = 85;
     private static  LoaderManager loaderManager;
     private int page = 1;
     private int methodOfSort;
     private boolean isLoading = false;
+    private static final String VOTE_COUNT = "1000";
+    private static final String AVERAGE_VOTE = "7";
+    public static final int POPULARITY = 0;
+    public static final int AVERAGE_VOTES = 1;
+    private static final String SORT_BY_POPULARITY = "popularity.desc";
+    private static final String SORT_BY_AVERAGE_VOTES = "vote_average.desc";
 
     private String lang;
 
@@ -59,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        compositeDisposable = new CompositeDisposable();
         loaderManager = LoaderManager.getInstance(this);
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewMostPopular);
@@ -94,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onReachEnd() {
                 if (!isLoading) {
-                    downloadData(methodOfSort,page);
+                    getMovies();
                 }
             }
         });
@@ -108,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
+        getMovies();
     }
 
     private int getWindowWidth() {
@@ -139,6 +154,51 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
+    private void getMovies() {
+        isLoading = true;
+        progressBarLoading.setVisibility(View.VISIBLE);
+
+        ApiFactory apiFactory = ApiFactory.getInstance();
+        ApiService apiService = apiFactory.getApiService();
+        Disposable disposable = apiService.getMovieResult(lang,whichOne(methodOfSort), String.valueOf(page),VOTE_COUNT,AVERAGE_VOTE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<MoviesResult>() {
+                    @Override
+                    public void accept(MoviesResult moviesResult) throws Exception {
+                        ArrayList<Movie> movies = (ArrayList<Movie>) moviesResult.getMovies();
+                        if (movies != null && !movies.isEmpty()) {
+                            if (page == 1) {
+                                viewModel.deleteAll();
+                                movieAdapter.clear();
+                            }
+                            for (Movie movie :
+                                    movies) {
+                                viewModel.insertMovie(movie);
+                            }
+                            movieAdapter.addMovies(movies);
+                            page++;
+                        }
+                        isLoading = false;
+                        progressBarLoading.setVisibility(View.INVISIBLE);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(MainActivity.this, "Error bro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (compositeDisposable != null) {
+            compositeDisposable.dispose();
+        }
+        super.onDestroy();
+    }
+
     private void methodOfSort(boolean isChecked) {
         if (isChecked) {
             textViewTopRated.setTextColor(getResources().getColor(R.color.purple));
@@ -150,15 +210,23 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             methodOfSort = NetworkUtils.POPULARITY;
         }
 
-        downloadData(methodOfSort , page);
+        getMovies();
     }
 
-    private void downloadData(int methodOfSort , int page) {
-        URL url = NetworkUtils.createURL(methodOfSort,page,lang);
-        Bundle bundle = new Bundle();
-        bundle.putString("url",url.toString());
-        loaderManager.restartLoader(LOADER_ID,bundle,this);
+    private String whichOne(int methodOfSort) {
+        if (methodOfSort == POPULARITY) {
+             return SORT_BY_POPULARITY;
+        } else {
+            return SORT_BY_AVERAGE_VOTES;
+        }
     }
+
+//    private void downloadData(int methodOfSort , int page) {
+//        URL url = NetworkUtils.createURL(methodOfSort,page,lang);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("url",url.toString());
+//        loaderManager.restartLoader(LOADER_ID,bundle,this);
+//    }
 
     public void onClickMostPopular(View view) {
         methodOfSort(false);
@@ -170,43 +238,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         methodOfSort(true);
         switchSort.setChecked(true);
     }
+//
+//    @NonNull
+//    @Override
+//    public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
+//        NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this , args);
+//        jsonLoader.setOnStartLoading(new NetworkUtils.JSONLoader.OnStartLoading() {
+//            @Override
+//            public void onStartLoading() {
+//                isLoading = true;
+//                progressBarLoading.setVisibility(View.VISIBLE);
+//            }
+//        });
+//        return jsonLoader;
+//    }
 
-    @NonNull
-    @Override
-    public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
-        NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this , args);
-        jsonLoader.setOnStartLoading(new NetworkUtils.JSONLoader.OnStartLoading() {
-            @Override
-            public void onStartLoading() {
-                isLoading = true;
-                progressBarLoading.setVisibility(View.VISIBLE);
-            }
-        });
-        return jsonLoader;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject jsonObject) {
-        List<Movie> movies = JSONUtils.getAllMoviesFromJSON(jsonObject);
-        if (movies != null && !movies.isEmpty()) {
-            if (page == 1) {
-                viewModel.deleteAll();
-                movieAdapter.clear();
-            }
-            for (Movie movie :
-                    movies) {
-                viewModel.insertMovie(movie);
-            }
-            movieAdapter.addMovies(movies);
-            page++;
-        }
-        isLoading = false;
-        progressBarLoading.setVisibility(View.INVISIBLE);
-        loaderManager.destroyLoader(LOADER_ID);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<JSONObject> loader) {
-
-    }
+//    @Override
+//    public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject jsonObject) {
+//        List<Movie> movies = JSONUtils.getAllMoviesFromJSON(jsonObject);
+//        if (movies != null && !movies.isEmpty()) {
+//            if (page == 1) {
+//                viewModel.deleteAll();
+//                movieAdapter.clear();
+//            }
+//            for (Movie movie :
+//                    movies) {
+//                viewModel.insertMovie(movie);
+//            }
+//            movieAdapter.addMovies(movies);
+//            page++;
+//        }
+//        isLoading = false;
+//        progressBarLoading.setVisibility(View.INVISIBLE);
+//        loaderManager.destroyLoader(LOADER_ID);
+//    }
+//
+//    @Override
+//    public void onLoaderReset(@NonNull Loader<JSONObject> loader) {
+//
+//    }
 }

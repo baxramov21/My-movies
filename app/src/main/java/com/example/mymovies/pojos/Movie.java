@@ -81,15 +81,15 @@ public class Movie {
     }
 
     @Ignore
-    public Movie(String backdropPath, int id, String originalTitle, String overview, String posterPath, String releaseDate, String title, boolean video, double voteAverage, int voteCount) {
+    public Movie(String backdropPath, int id, String originalLanguage, String originalTitle, String overview, String posterPath, String releaseDate, String title, double voteAverage, int voteCount) {
         this.backdropPath = backdropPath;
         this.id = id;
+        this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
         this.overview = overview;
         this.posterPath = posterPath;
         this.releaseDate = releaseDate;
         this.title = title;
-        this.video = video;
         this.voteAverage = voteAverage;
         this.voteCount = voteCount;
     }

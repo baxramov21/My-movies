@@ -47,7 +47,7 @@ public class NetworkUtils {
                 .appendQueryParameter(PARAM_LANGUAGE,lang)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY_VALUE).build();
         try {
-            Log.i("link", uri.toString());
+            Log.i("link_for_reviews", uri.toString());
             return new URL(uri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -71,6 +71,7 @@ public class NetworkUtils {
                 .appendQueryParameter(PARAM_API_KEY, API_KEY_VALUE)
                 .appendQueryParameter(PARAM_LANGUAGE, lang).build();
         try {
+            Log.d("link_for_videos",uri.toString());
             return new URL(uri.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();

@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import com.example.mymovies.R;
 import com.example.mymovies.adapter.MovieAdapter;
 import com.example.mymovies.data.FavouriteMovie;
-import com.example.mymovies.data.Movie;
+import com.example.mymovies.pojos.Movie;
 import com.example.mymovies.data.MovieViewModel;
 
 import java.util.ArrayList;
@@ -25,19 +25,17 @@ import java.util.List;
 
 public class FavouriteActivity extends AppCompatActivity {
 
-    private RecyclerView rv_favourite_movies;
     private MovieAdapter movieAdapter;
-    private MovieViewModel viewModelMovies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
-        rv_favourite_movies = findViewById(R.id.recycler_view_favourite_movies);
+        RecyclerView rv_favourite_movies = findViewById(R.id.recycler_view_favourite_movies);
         movieAdapter = new MovieAdapter();
         rv_favourite_movies.setLayoutManager(new GridLayoutManager(this, 2));
         rv_favourite_movies.setAdapter(movieAdapter);
-        viewModelMovies = ViewModelProviders.of(this).get(MovieViewModel.class);
+        MovieViewModel viewModelMovies = ViewModelProviders.of(this).get(MovieViewModel.class);
         LiveData<List<FavouriteMovie>> movies = viewModelMovies.getFavouriteMovies();
         movies.observe(this, new Observer<List<FavouriteMovie>>() {
             @Override

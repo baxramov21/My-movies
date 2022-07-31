@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import com.example.mymovies.pojos.Movie;
 
 public class MovieViewModel extends AndroidViewModel {
 
@@ -79,7 +80,7 @@ public class MovieViewModel extends AndroidViewModel {
         @Override
         protected Movie doInBackground(Integer... integers) {
             if (integers != null && integers.length > 0) {
-                return database.moviesDao().getMovieByID(integers[0]);
+                return database.moviesDao().getMovieById(integers[0]);
             }
             return null;
         }
@@ -90,7 +91,7 @@ public class MovieViewModel extends AndroidViewModel {
         @Override
         protected FavouriteMovie doInBackground(Integer... integers) {
             if (integers != null && integers.length > 0) {
-                return database.moviesDao().getFavouriteMovieByID(integers[0]);
+                return database.moviesDao().getFavouriteMovieById(integers[0]);
             }
             return null;
         }
@@ -108,7 +109,7 @@ public class MovieViewModel extends AndroidViewModel {
         @Override
         protected Void doInBackground(Movie... movies) {
             if (movies != null && movies.length > 0)
-                database.moviesDao().addMovie(movies[0]);
+                database.moviesDao().insertMovie(movies[0]);
             return null;
         }
     }
@@ -126,7 +127,7 @@ public class MovieViewModel extends AndroidViewModel {
         @Override
         protected Void doInBackground(FavouriteMovie... movies) {
             if (movies != null && movies.length > 0)
-                database.moviesDao().addFavouriteMovie(movies[0]);
+                database.moviesDao().insertFavouriteMovie(movies[0]);
             return null;
         }
     }

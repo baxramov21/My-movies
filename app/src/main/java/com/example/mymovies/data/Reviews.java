@@ -1,13 +1,60 @@
+
 package com.example.mymovies.data;
+
+import com.example.mymovies.pojos.AuthorDetails;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Reviews {
 
+    @SerializedName("author")
+    @Expose
     private String author;
-    private String review_title;
+    @SerializedName("author_details")
+    @Expose
+    private AuthorDetails authorDetails;
+    @SerializedName("content")
+    @Expose
+    private String content;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("updated_at")
+    @Expose
+    private String updatedAt;
+    @SerializedName("url")
+    @Expose
+    private String url;
 
-    public Reviews(String author, String review_title) {
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
+    public Reviews() {
+    }
+
+    /**
+     * 
+     * @param createdAt
+     * @param author
+     * @param authorDetails
+     * @param id
+     * @param content
+     * @param url
+     * @param updatedAt
+     */
+    public Reviews(String author, AuthorDetails authorDetails, String content, String createdAt, String id, String updatedAt, String url) {
+        super();
         this.author = author;
-        this.review_title = review_title;
+        this.authorDetails = authorDetails;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.id = id;
+        this.updatedAt = updatedAt;
+        this.url = url;
     }
 
     public String getAuthor() {
@@ -18,11 +65,52 @@ public class Reviews {
         this.author = author;
     }
 
-    public String getReview_title() {
-        return review_title;
+    public AuthorDetails getAuthorDetails() {
+        return authorDetails;
     }
 
-    public void setReview_title(String review_title) {
-        this.review_title = review_title;
+    public void setAuthorDetails(AuthorDetails authorDetails) {
+        this.authorDetails = authorDetails;
     }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }

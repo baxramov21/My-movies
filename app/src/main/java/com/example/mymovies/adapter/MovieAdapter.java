@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mymovies.R;
-import com.example.mymovies.data.Movie;
+import com.example.mymovies.pojos.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -20,6 +20,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
     private List<Movie> movies;
     private OnPosterClick onPosterClickListener;
     private OnReachEndListener onReachEndListener;
+    private static final String BASE_POSTER_URL = "https://image.tmdb.org/t/p/";
+    private static final String SMALL_POSTER_SIZE = "w185";
 
     public MovieAdapter() {
         movies = new ArrayList<>();
@@ -54,7 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
             onReachEndListener.onReachEnd();
         }
         Movie movie = movies.get(position);
-        Picasso.get().load(movie.getPosterPath()).into(holder.imageViewSmallPoster);
+        Picasso.get().load(BASE_POSTER_URL + SMALL_POSTER_SIZE + movie.getPosterPath()).into(holder.imageViewSmallPoster);
     }
 
     public void clear() {

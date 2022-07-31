@@ -10,7 +10,7 @@ public class ApiFactory {
     private static ApiFactory apiFactory;
     private static final Object LOCK = new Object();
     private Retrofit retrofit;
-    private static final String BASE_URL = "https://api.themoviedb.org/3/discover/";
+    private static final String BASE_URL = "https://api.themoviedb.org/3/";
 
     private ApiFactory() {
         retrofit = new Retrofit.Builder()
