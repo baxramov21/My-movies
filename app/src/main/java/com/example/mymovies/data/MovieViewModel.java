@@ -7,11 +7,32 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import com.example.mymovies.api.ApiFactory;
+import com.example.mymovies.api.ApiService;
 import com.example.mymovies.pojos.Movie;
+import com.example.mymovies.pojos.MoviesResult;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MovieViewModel extends AndroidViewModel {
+
+    private static final String VOTE_COUNT = "1000";
+    private static final String AVERAGE_VOTE = "7";
+    public static final int POPULARITY = 0;
+    public static final int AVERAGE_VOTES = 1;
+    private static final String SORT_BY_POPULARITY = "popularity.desc";
+    private static final String SORT_BY_AVERAGE_VOTES = "vote_average.desc";
+
+
+    private CompositeDisposable compositeDisposable;
 
     public static MoviesDatabase database;
     private LiveData<List<Movie>> movies;
@@ -22,6 +43,7 @@ public class MovieViewModel extends AndroidViewModel {
         database = MoviesDatabase.getInstance(getApplication());
         movies = database.moviesDao().getAllMovies();
         favouriteMovies = database.moviesDao().getAllFavouriteMovies();
+        compositeDisposable = new CompositeDisposable();
     }
 
     public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
@@ -55,8 +77,8 @@ public class MovieViewModel extends AndroidViewModel {
         new DeleteAllMoviesTask().execute();
     }
 
-    public void insertMovie(Movie movie) {
-        new InsertMovieTask().execute(movie);
+    public void insertMovie(List<Movie> movies) {
+        new InsertMovieTask().execute(movies);
     }
 
     public void deleteMovie(Movie movie) {
@@ -86,6 +108,55 @@ public class MovieViewModel extends AndroidViewModel {
         }
     }
 
+    public void downloadMovies(String lang, int methodOfSort, int page) {
+        String howtoSort = methodOfSort(methodOfSort);
+        ApiFactory apiFactory = ApiFactory.getInstance();
+        ApiService apiService = apiFactory.getApiService();
+        Disposable disposable = apiService.getMovieResult(lang, howtoSort, String.valueOf(page), VOTE_COUNT, AVERAGE_VOTE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<MoviesResult>() {
+                    @Override
+                    public void accept(MoviesResult moviesResult) throws Exception {
+                        ArrayList<Movie> movies = (ArrayList<Movie>) moviesResult.getMovies();
+                        if (movies != null && !movies.isEmpty()) {
+                            if (page == 1) {
+                                deleteAll();
+//                              movieAdapter.clear();
+                            }
+
+                            insertMovie(movies);
+//                            movieAdapter.addMovies(movies);
+//                            page++;
+                        }
+//                        isLoading = false;
+//                        progressBarLoading.setVisibility(View.INVISIBLE);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+//                        Toast.makeText(MainActivity.this, "Error bro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    private String methodOfSort(int methodOfSort) {
+        if (methodOfSort == POPULARITY) {
+            return SORT_BY_POPULARITY;
+        } else {
+            return SORT_BY_AVERAGE_VOTES;
+        }
+    }
+
+    @Override
+    protected void onCleared() {
+        if (compositeDisposable != null) {
+            compositeDisposable.dispose();
+        }
+        super.onCleared();
+    }
+
     private static class GetFavouriteMovieByIdTask extends AsyncTask<Integer, Void, FavouriteMovie> {
 
         @Override
@@ -105,9 +176,9 @@ public class MovieViewModel extends AndroidViewModel {
         }
     }
 
-    private static class InsertMovieTask extends AsyncTask<Movie, Void, Void> {
+    private static class InsertMovieTask extends AsyncTask<List<Movie>, Void, Void> {
         @Override
-        protected Void doInBackground(Movie... movies) {
+        protected Void doInBackground(List<Movie>... movies) {
             if (movies != null && movies.length > 0)
                 database.moviesDao().insertMovie(movies[0]);
             return null;

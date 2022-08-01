@@ -27,7 +27,7 @@ import java.util.List;
         void deleteAllMovies();
 
         @Insert
-        void insertMovie(Movie movie);
+        void insertMovie(List<Movie> movies);
 
         @Delete
         void deleteMovie(Movie movie);

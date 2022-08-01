@@ -52,18 +52,15 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBarLoading;
 
     private CompositeDisposable compositeDisposable;
-
-    private static final int LOADER_ID = 85;
-    private static  LoaderManager loaderManager;
     private int page = 1;
     private int methodOfSort;
     private boolean isLoading = false;
-    private static final String VOTE_COUNT = "1000";
-    private static final String AVERAGE_VOTE = "7";
-    public static final int POPULARITY = 0;
-    public static final int AVERAGE_VOTES = 1;
-    private static final String SORT_BY_POPULARITY = "popularity.desc";
-    private static final String SORT_BY_AVERAGE_VOTES = "vote_average.desc";
+//    private static final String VOTE_COUNT = "1000";
+//    private static final String AVERAGE_VOTE = "7";
+//    public static final int POPULARITY = 0;
+//    public static final int AVERAGE_VOTES = 1;
+//    private static final String SORT_BY_POPULARITY = "popularity.desc";
+//    private static final String SORT_BY_AVERAGE_VOTES = "vote_average.desc";
 
     private String lang;
 
@@ -73,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         compositeDisposable = new CompositeDisposable();
-        loaderManager = LoaderManager.getInstance(this);
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewMostPopular);
         textViewTopRated = findViewById(R.id.textViewTopRated);
@@ -98,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPosterClick(int position) {
                 Movie clickedMovie = movieAdapter.getMovies().get(position);
-                Intent intentToMovieDetail = new Intent(MainActivity.this , DetailActivity.class);
-                intentToMovieDetail.putExtra("ID",clickedMovie.getId());
+                Intent intentToMovieDetail = new Intent(MainActivity.this, DetailActivity.class);
+                intentToMovieDetail.putExtra("ID", clickedMovie.getId());
                 startActivity(intentToMovieDetail);
             }
         });
@@ -108,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReachEnd() {
                 if (!isLoading) {
-                    getMovies();
+                    page++;
+                    viewModel.downloadMovies(lang, methodOfSort, page);
                 }
             }
         });
@@ -117,12 +114,21 @@ public class MainActivity extends AppCompatActivity {
         moviesFromLiveData.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(List<Movie> movies) {
-                if (page == 1) {
-                    movieAdapter.setMovies(movies);
+                if (movies != null) {
+//                    if (page == 1) {
+                        movieAdapter.clear();
+//                    }
+                    movieAdapter.addMovies(movies);
+                    page++;
                 }
+                isLoading = false;
+                progressBarLoading.setVisibility(View.INVISIBLE);
             }
         });
-        getMovies();
+
+        if (isLoading) {
+            viewModel.downloadMovies(lang, methodOfSort, page);
+        }
     }
 
     private int getWindowWidth() {
@@ -154,42 +160,42 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getMovies() {
-        isLoading = true;
-        progressBarLoading.setVisibility(View.VISIBLE);
-
-        ApiFactory apiFactory = ApiFactory.getInstance();
-        ApiService apiService = apiFactory.getApiService();
-        Disposable disposable = apiService.getMovieResult(lang,whichOne(methodOfSort), String.valueOf(page),VOTE_COUNT,AVERAGE_VOTE)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<MoviesResult>() {
-                    @Override
-                    public void accept(MoviesResult moviesResult) throws Exception {
-                        ArrayList<Movie> movies = (ArrayList<Movie>) moviesResult.getMovies();
-                        if (movies != null && !movies.isEmpty()) {
-                            if (page == 1) {
-                                viewModel.deleteAll();
-                                movieAdapter.clear();
-                            }
-                            for (Movie movie :
-                                    movies) {
-                                viewModel.insertMovie(movie);
-                            }
-                            movieAdapter.addMovies(movies);
-                            page++;
-                        }
-                        isLoading = false;
-                        progressBarLoading.setVisibility(View.INVISIBLE);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Toast.makeText(MainActivity.this, "Error bro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-        compositeDisposable.add(disposable);
-    }
+//    private void getMovies() {
+//        isLoading = true;
+//        progressBarLoading.setVisibility(View.VISIBLE);
+//
+//        ApiFactory apiFactory = ApiFactory.getInstance();
+//        ApiService apiService = apiFactory.getApiService();
+//        Disposable disposable = apiService.getMovieResult(lang,whichOne(methodOfSort), String.valueOf(page),VOTE_COUNT,AVERAGE_VOTE)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<MoviesResult>() {
+//                    @Override
+//                    public void accept(MoviesResult moviesResult) throws Exception {
+//                        ArrayList<Movie> movies = (ArrayList<Movie>) moviesResult.getMovies();
+//                        if (movies != null && !movies.isEmpty()) {
+//                            if (page == 1) {
+//                                viewModel.deleteAll();
+//                                movieAdapter.clear();
+//                            }
+//                            for (Movie movie :
+//                                    movies) {
+//                                viewModel.insertMovie(movie);
+//                            }
+//                            movieAdapter.addMovies(movies);
+//                            page++;
+//                        }
+//                        isLoading = false;
+//                        progressBarLoading.setVisibility(View.INVISIBLE);
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        Toast.makeText(MainActivity.this, "Error bro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//        compositeDisposable.add(disposable);
+//    }
 
     @Override
     protected void onDestroy() {
@@ -210,16 +216,16 @@ public class MainActivity extends AppCompatActivity {
             methodOfSort = NetworkUtils.POPULARITY;
         }
 
-        getMovies();
+        viewModel.downloadMovies(lang, methodOfSort, page);
     }
 
-    private String whichOne(int methodOfSort) {
-        if (methodOfSort == POPULARITY) {
-             return SORT_BY_POPULARITY;
-        } else {
-            return SORT_BY_AVERAGE_VOTES;
-        }
-    }
+//    private String whichOne(int methodOfSort) {
+//        if (methodOfSort == POPULARITY) {
+//             return SORT_BY_POPULARITY;
+//        } else {
+//            return SORT_BY_AVERAGE_VOTES;
+//        }
+//    }
 
 //    private void downloadData(int methodOfSort , int page) {
 //        URL url = NetworkUtils.createURL(methodOfSort,page,lang);
