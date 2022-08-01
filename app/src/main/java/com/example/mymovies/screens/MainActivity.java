@@ -3,7 +3,6 @@ package com.example.mymovies.screens;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,8 +60,24 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, getWindowWidth()));
         movieAdapter = new MovieAdapter();
         recyclerViewPosters.setAdapter(movieAdapter);
+
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
         switchSort.setChecked(true);
+        onCheckedChanged();
+        methodOfSort(false);
+        onPosterClick();
+
+        movieAdapter.setOnReachEndListener(() -> {
+            if (!isLoading) {
+                page++;
+                viewModel.downloadMovies(lang, methodOfSort, page);
+            }
+        });
+
+        onDataChanged();
+    }
+
+    private void onCheckedChanged() {
         switchSort.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -70,8 +85,11 @@ public class MainActivity extends AppCompatActivity {
                 methodOfSort(isChecked);
             }
         });
+
         switchSort.setChecked(false);
-        methodOfSort(false);
+    }
+
+    private void onPosterClick() {
         movieAdapter.setOnPosterClickListener(new MovieAdapter.OnPosterClick() {
             @Override
             public void onPosterClick(int position) {
@@ -81,31 +99,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentToMovieDetail);
             }
         });
+    }
 
-        movieAdapter.setOnReachEndListener(new MovieAdapter.OnReachEndListener() {
-            @Override
-            public void onReachEnd() {
-                if (!isLoading) {
-                    page++;
-                    viewModel.downloadMovies(lang, methodOfSort, page);
-                }
-            }
-        });
-
+    private void onDataChanged() {
         LiveData<List<Movie>> moviesFromLiveData = viewModel.getMovies();
-        moviesFromLiveData.observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(List<Movie> movies) {
-                if (movies != null) {
+        moviesFromLiveData.observe(this, movies -> {
+            if (movies != null) {
 //                    if (page == 1) {
-                        movieAdapter.clear();
+                movieAdapter.clear();
 //                    }
-                    movieAdapter.addMovies(movies);
-                    page++;
-                }
-                isLoading = false;
-                progressBarLoading.setVisibility(View.INVISIBLE);
+                movieAdapter.addMovies(movies);
+                page++;
             }
+            isLoading = false;
+            progressBarLoading.setVisibility(View.INVISIBLE);
         });
 
         if (isLoading) {
