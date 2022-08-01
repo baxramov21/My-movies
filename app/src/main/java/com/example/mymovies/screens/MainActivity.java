@@ -201,21 +201,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel.downloadMovies(lang, methodOfSort, page);
     }
 
-//    private String whichOne(int methodOfSort) {
-//        if (methodOfSort == POPULARITY) {
-//             return SORT_BY_POPULARITY;
-//        } else {
-//            return SORT_BY_AVERAGE_VOTES;
-//        }
-//    }
-
-//    private void downloadData(int methodOfSort , int page) {
-//        URL url = NetworkUtils.createURL(methodOfSort,page,lang);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("url",url.toString());
-//        loaderManager.restartLoader(LOADER_ID,bundle,this);
-//    }
-
     public void onClickMostPopular(View view) {
         methodOfSort(false);
         switchSort.setChecked(false);
