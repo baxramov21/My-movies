@@ -43,12 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private int page = 1;
     private int methodOfSort;
     private boolean isLoading = false;
-//    private static final String VOTE_COUNT = "1000";
-//    private static final String AVERAGE_VOTE = "7";
-//    public static final int POPULARITY = 0;
-//    public static final int AVERAGE_VOTES = 1;
-//    private static final String SORT_BY_POPULARITY = "popularity.desc";
-//    private static final String SORT_BY_AVERAGE_VOTES = "vote_average.desc";
 
     private String lang;
 
@@ -232,43 +226,4 @@ public class MainActivity extends AppCompatActivity {
         methodOfSort(true);
         switchSort.setChecked(true);
     }
-//
-//    @NonNull
-//    @Override
-//    public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
-//        NetworkUtils.JSONLoader jsonLoader = new NetworkUtils.JSONLoader(this , args);
-//        jsonLoader.setOnStartLoading(new NetworkUtils.JSONLoader.OnStartLoading() {
-//            @Override
-//            public void onStartLoading() {
-//                isLoading = true;
-//                progressBarLoading.setVisibility(View.VISIBLE);
-//            }
-//        });
-//        return jsonLoader;
-//    }
-
-//    @Override
-//    public void onLoadFinished(@NonNull Loader<JSONObject> loader, JSONObject jsonObject) {
-//        List<Movie> movies = JSONUtils.getAllMoviesFromJSON(jsonObject);
-//        if (movies != null && !movies.isEmpty()) {
-//            if (page == 1) {
-//                viewModel.deleteAll();
-//                movieAdapter.clear();
-//            }
-//            for (Movie movie :
-//                    movies) {
-//                viewModel.insertMovie(movie);
-//            }
-//            movieAdapter.addMovies(movies);
-//            page++;
-//        }
-//        isLoading = false;
-//        progressBarLoading.setVisibility(View.INVISIBLE);
-//        loaderManager.destroyLoader(LOADER_ID);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(@NonNull Loader<JSONObject> loader) {
-//
-//    }
 }
