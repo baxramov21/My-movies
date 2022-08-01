@@ -1,4 +1,4 @@
-package com.example.mymovies.data;
+package com.example.mymovies.pojos;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;

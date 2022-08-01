@@ -1,14 +1,17 @@
-package com.example.mymovies.data;
+package com.example.mymovies.db;
 
 import android.content.Context;
 
-import androidx.room.Dao;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import com.example.mymovies.pojos.Movie;
 
-@Database(entities = {Movie.class , FavouriteMovie.class} , version = 5 , exportSchema = false)
+import com.example.mymovies.pojos.FavouriteMovie;
+import com.example.mymovies.pojos.Movie;
+import com.example.mymovies.pojos.Review;
+import com.example.mymovies.pojos.Trailer;
+
+@Database(entities = {Movie.class , FavouriteMovie.class, Review.class, Trailer.class} , version = 6 , exportSchema = false)
 public abstract class MoviesDatabase extends RoomDatabase {
 
     private static MoviesDatabase moviesDatabase;

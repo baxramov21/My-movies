@@ -1,8 +1,25 @@
-package com.example.mymovies.data;
+package com.example.mymovies.pojos;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "trailers")
 public class Trailer {
+
+
+    public int getUnique_id() {
+        return unique_id;
+    }
+
+    public void setUnique_id(int unique_id) {
+        this.unique_id = unique_id;
+    }
+
+    @PrimaryKey(autoGenerate = true)
+    private int unique_id;
 
     @SerializedName("iso_639_1")
     @Expose
@@ -39,6 +56,21 @@ public class Trailer {
      * No args constructor for use in serialization
      *
      */
+
+    public Trailer(int unique_id, String iso6391, String iso31661, String name, String key, String site, Integer size, String type, Boolean official, String publishedAt, String id) {
+        this.unique_id = unique_id;
+        this.iso6391 = iso6391;
+        this.iso31661 = iso31661;
+        this.name = name;
+        this.key = key;
+        this.site = site;
+        this.size = size;
+        this.type = type;
+        this.official = official;
+        this.publishedAt = publishedAt;
+        this.id = id;
+    }
+
     /**
      *
      * @param site
@@ -52,6 +84,10 @@ public class Trailer {
      * @param type
      * @param key
      */
+
+
+
+    @Ignore
     public Trailer(String iso6391, String iso31661, String name, String key, String site, Integer size, String type, Boolean official, String publishedAt, String id) {
         super();
         this.iso6391 = iso6391;

@@ -1,6 +1,5 @@
 package com.example.mymovies.pojos;
 
-import com.example.mymovies.data.Trailer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mymovies.R;
-import com.example.mymovies.data.Trailer;
+import com.example.mymovies.pojos.Trailer;
 
 import java.util.ArrayList;
 

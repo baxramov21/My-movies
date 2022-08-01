@@ -8,15 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mymovies.R;
-import com.example.mymovies.data.Reviews;
+import com.example.mymovies.pojos.Review;
 
 import java.util.ArrayList;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-    private ArrayList<Reviews> reviews;
+    private ArrayList<Review> reviews;
 
-    public void setTrailers(ArrayList<Reviews> trailers) {
+    public void setTrailers(ArrayList<Review> trailers) {
         this.reviews = trailers;
         notifyDataSetChanged();
     }
@@ -30,7 +30,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        Reviews review = this.reviews.get(position);
+        Review review = this.reviews.get(position);
         holder.textViewAuthor.setText(review.getAuthor());
         holder.textViewReviewContent.setText(review.getContent());
     }

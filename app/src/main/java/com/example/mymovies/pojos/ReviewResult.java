@@ -1,6 +1,5 @@
 package com.example.mymovies.pojos;
 
-import com.example.mymovies.data.Reviews;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +15,7 @@ public class ReviewResult {
     private Integer page;
     @SerializedName("results")
     @Expose
-    private List<Reviews> results = null;
+    private List<Review> results = null;
     @SerializedName("total_pages")
     @Expose
     private Integer totalPages;
@@ -40,11 +39,11 @@ public class ReviewResult {
         this.page = page;
     }
 
-    public List<Reviews> getResults() {
+    public List<Review> getReviews() {
         return results;
     }
 
-    public void setResults(List<Reviews> results) {
+    public void setResults(List<Review> results) {
         this.results = results;
     }
 

@@ -16,9 +16,8 @@ import android.view.MenuItem;
 
 import com.example.mymovies.R;
 import com.example.mymovies.adapter.MovieAdapter;
-import com.example.mymovies.data.FavouriteMovie;
+import com.example.mymovies.pojos.FavouriteMovie;
 import com.example.mymovies.pojos.Movie;
-import com.example.mymovies.data.MovieViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

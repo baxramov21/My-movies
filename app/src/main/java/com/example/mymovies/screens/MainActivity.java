@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.loader.app.LoaderManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,26 +19,15 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mymovies.R;
 import com.example.mymovies.adapter.MovieAdapter;
-import com.example.mymovies.api.ApiFactory;
-import com.example.mymovies.api.ApiService;
 import com.example.mymovies.pojos.Movie;
-import com.example.mymovies.data.MovieViewModel;
-import com.example.mymovies.pojos.MoviesResult;
-import com.example.mymovies.utils.NetworkUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -209,11 +197,11 @@ public class MainActivity extends AppCompatActivity {
         if (isChecked) {
             textViewTopRated.setTextColor(getResources().getColor(R.color.purple));
             textViewPopularity.setTextColor(getResources().getColor(R.color.white));
-            methodOfSort = NetworkUtils.AVERAGE_VOTES;
+            methodOfSort = 1;  // Average votes
         } else {
             textViewPopularity.setTextColor(getResources().getColor(R.color.purple));
             textViewTopRated.setTextColor(getResources().getColor(R.color.white));
-            methodOfSort = NetworkUtils.POPULARITY;
+            methodOfSort = 0;  // Popularity
         }
 
         viewModel.downloadMovies(lang, methodOfSort, page);
