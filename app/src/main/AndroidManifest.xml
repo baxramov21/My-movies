@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mymovies">
+    package="com.sheyx.mymovies">
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -11,13 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyMovies">
         <activity
-            android:name=".screens.FavouriteActivity"
+            android:name="com.sheyx.mymovies.screens.FavouriteActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.DetailActivity"
+            android:name="com.sheyx.mymovies.screens.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.MainActivity"
+            android:name="com.sheyx.mymovies.screens.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
