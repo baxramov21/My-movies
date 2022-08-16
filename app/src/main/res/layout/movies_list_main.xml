@@ -7,21 +7,35 @@
     android:background="@color/black"
     tools:context=".screens.MoviesListActivity">
 
+    <SearchView
+        android:id="@+id/movieSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:queryHint="Type movie name that you want to find"
+        android:textAlignment="center"
+        app:iconifiedByDefault="false"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Switch
         android:id="@+id/switchSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/movieSearch"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
         android:id="@+id/textViewMostPopular"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/most_popular"
         android:onClick="onClickMostPopular"
+        android:text="@string/most_popular"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/switchSort"
         app:layout_constraintEnd_toStartOf="@+id/switchSort"
@@ -33,8 +47,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/top_rated"
         android:onClick="onClickTopRated"
+        android:text="@string/top_rated"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/switchSort"
         app:layout_constraintEnd_toEndOf="parent"

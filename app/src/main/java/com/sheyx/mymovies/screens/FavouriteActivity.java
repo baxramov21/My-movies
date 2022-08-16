@@ -31,7 +31,7 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
         RecyclerView rv_favourite_movies = findViewById(R.id.recycler_view_favourite_movies);
-        movieAdapter = new MovieAdapter();
+        movieAdapter = new MovieAdapter(this);
         rv_favourite_movies.setLayoutManager(new GridLayoutManager(this, 2));
         rv_favourite_movies.setAdapter(movieAdapter);
         MovieViewModel viewModelMovies = ViewModelProviders.of(this).get(MovieViewModel.class);

@@ -1,5 +1,6 @@
 package com.sheyx.mymovies.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.sheyx.mymovies.R;
 import com.sheyx.mymovies.pojos.Movie;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
     private OnReachEndListener onReachEndListener;
     private static final String BASE_POSTER_URL = "https://image.tmdb.org/t/p/";
     private static final String SMALL_POSTER_SIZE = "w185";
+    private Context context;
 
-    public MovieAdapter() {
+    public MovieAdapter(Context context) {
         movies = new ArrayList<>();
+        this.context = context;
     }
 
     public interface OnPosterClick {
@@ -56,7 +59,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
             onReachEndListener.onReachEnd();
         }
         Movie movie = movies.get(position);
-        Picasso.get().load(BASE_POSTER_URL + SMALL_POSTER_SIZE + movie.getPosterPath()).placeholder(R.drawable.landscape).into(holder.imageViewSmallPoster);
+        String imageUrl = BASE_POSTER_URL + SMALL_POSTER_SIZE + movie.getPosterPath();
+//        Picasso.get().load(imageUrl).placeholder(R.drawable.landscape).into(holder.imageViewSmallPoster);
+        Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.landscape)
+                .into(holder.imageViewSmallPoster);
     }
 
     public void clear() {

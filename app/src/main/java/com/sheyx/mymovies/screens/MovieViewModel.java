@@ -29,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MovieViewModel extends AndroidViewModel {
 
-    private static final String VOTE_COUNT = "1000";
+    private static final String VOTE_COUNT = "900";
     private static final String AVERAGE_VOTE = "7";
     public static final int POPULARITY = 0;
     public static final int AVERAGE_VOTES = 1;

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -43,22 +44,29 @@ public class MoviesListActivity extends AppCompatActivity {
     private int methodOfSort;
     private boolean isLoading = false;
 
-    private String lang;
+    private String language;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movies_list_main);
+        SearchView searchView = findViewById(R.id.movieSearch);
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.setIconifiedByDefault(false);
+            }
+        });
         compositeDisposable = new CompositeDisposable();
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewMostPopular);
         textViewTopRated = findViewById(R.id.textViewTopRated);
         progressBarLoading = findViewById(R.id.progressBarLoading);
         recyclerViewPosters = findViewById(R.id.recyclerViewPosters);
-        lang = Locale.getDefault().getLanguage();
+        language = Locale.getDefault().getLanguage();
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, getWindowWidth()));
-        movieAdapter = new MovieAdapter();
+        movieAdapter = new MovieAdapter(this);
         recyclerViewPosters.setAdapter(movieAdapter);
 
         viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
@@ -71,7 +79,7 @@ public class MoviesListActivity extends AppCompatActivity {
             if (!isLoading) {
                 progressBarLoading.setVisibility(View.VISIBLE);
                 page++;
-                viewModel.downloadMovies(lang, methodOfSort, page);
+                viewModel.downloadMovies(language, methodOfSort, page);
             }
         });
 
@@ -117,7 +125,7 @@ public class MoviesListActivity extends AppCompatActivity {
         });
 
         if (isLoading) {
-            viewModel.downloadMovies(lang, methodOfSort, page);
+            viewModel.downloadMovies(language, methodOfSort, page);
         }
     }
 
@@ -204,7 +212,7 @@ public class MoviesListActivity extends AppCompatActivity {
             methodOfSort = 0;  // Popularity
         }
 
-        viewModel.downloadMovies(lang, methodOfSort, page);
+        viewModel.downloadMovies(language, methodOfSort, page);
     }
 
     public void onClickMostPopular(View view) {
