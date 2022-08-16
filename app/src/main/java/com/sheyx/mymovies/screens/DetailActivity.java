@@ -11,6 +11,7 @@ import com.sheyx.mymovies.R;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -107,6 +108,7 @@ public class DetailActivity extends AppCompatActivity {
 
                     trailerAdapter.setOnClickPlayVideo(url -> {
                         Intent intent = new Intent(Intent.ACTION_VIEW,  Uri.parse( "https://www.youtube.com/watch?v=" + url));
+                        Log.d("url","https://www.youtube.com/watch?v=" + url);
                         startActivity(intent);
                     });
         });
@@ -135,14 +137,12 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.main_movies_menu_item:
-                Intent intent_to_MA = new Intent(this, MainActivity.class);
-                startActivity(intent_to_MA);
-
-            case R.id.favourite_movies_menu_item:
-                Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
-                startActivity(intent_to_favourite_activity);
+        if (id == R.id.main_movies_menu_item) {
+            Intent intent_to_MA = new Intent(this, MoviesListActivity.class);
+            startActivity(intent_to_MA);
+        } else {
+            Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
+            startActivity(intent_to_favourite_activity);
         }
         return super.onOptionsItemSelected(item);
     }

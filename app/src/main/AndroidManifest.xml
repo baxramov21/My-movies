@@ -17,7 +17,7 @@
             android:name="com.sheyx.mymovies.screens.DetailActivity"
             android:exported="false" />
         <activity
-            android:name="com.sheyx.mymovies.screens.MainActivity"
+            android:name="com.sheyx.mymovies.screens.MoviesListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

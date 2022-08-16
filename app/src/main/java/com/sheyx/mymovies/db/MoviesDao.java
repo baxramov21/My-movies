@@ -54,4 +54,10 @@ public interface MoviesDao {
 
     @Insert
     void insertReviews(List<Review> reviews);
+
+    @Query("DELETE FROM reviews")
+    void deleteAllReviews();
+
+    @Query("DELETE FROM trailers")
+    void deleteAllTrailers();
 }

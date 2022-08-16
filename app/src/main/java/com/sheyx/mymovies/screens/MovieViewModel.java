@@ -241,6 +241,7 @@ public class MovieViewModel extends AndroidViewModel {
         @Override
         protected final Void doInBackground(List<Trailer>... lists) {
             if (lists != null && lists.length > 0) {
+                database.moviesDao().deleteAllTrailers();
                 database.moviesDao().insertTrailers(lists[0]);
             }
             return null;
@@ -254,6 +255,7 @@ public class MovieViewModel extends AndroidViewModel {
         @Override
         protected final Void doInBackground(List<Review>... lists) {
             if (lists != null && lists.length > 0) {
+                database.moviesDao().deleteAllReviews();
                 database.moviesDao().insertReviews(lists[0]);
             }
             return null;

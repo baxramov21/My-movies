@@ -69,15 +69,12 @@ public class FavouriteActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.main_movies_menu_item:
-                Intent intent_to_MA = new Intent(this, MainActivity.class);
-                startActivity(intent_to_MA);
-                break;
-            case R.id.favourite_movies_menu_item:
-                Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
-                startActivity(intent_to_favourite_activity);
-                break;
+        if (id == R.id.main_movies_menu_item) {
+            Intent intent_to_MA = new Intent(this, MoviesListActivity.class);
+            startActivity(intent_to_MA);
+        } else {
+            Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
+            startActivity(intent_to_favourite_activity);
         }
         return super.onOptionsItemSelected(item);
     }

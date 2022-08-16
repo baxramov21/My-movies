@@ -28,7 +28,7 @@ import java.util.Locale;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainActivity extends AppCompatActivity {
+public class MoviesListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.movies_list_main);
         compositeDisposable = new CompositeDisposable();
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewMostPopular);
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         movieAdapter.setOnReachEndListener(() -> {
             if (!isLoading) {
+                progressBarLoading.setVisibility(View.VISIBLE);
                 page++;
                 viewModel.downloadMovies(lang, methodOfSort, page);
             }
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPosterClick(int position) {
                 Movie clickedMovie = movieAdapter.getMovies().get(position);
-                Intent intentToMovieDetail = new Intent(MainActivity.this, DetailActivity.class);
+                Intent intentToMovieDetail = new Intent(MoviesListActivity.this, DetailActivity.class);
                 intentToMovieDetail.putExtra("ID", clickedMovie.getId());
                 startActivity(intentToMovieDetail);
             }
@@ -137,14 +138,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.main_movies_menu_item:
-                Intent intent_to_MA = new Intent(this, MainActivity.class);
-                startActivity(intent_to_MA);
-
-            case R.id.favourite_movies_menu_item:
-                Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
-                startActivity(intent_to_favourite_activity);
+        if (id == R.id.main_movies_menu_item) {
+            Intent intent_to_MA = new Intent(this, MoviesListActivity.class);
+            startActivity(intent_to_MA);
+        } else {
+            Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
+            startActivity(intent_to_favourite_activity);
         }
         return super.onOptionsItemSelected(item);
     }
