@@ -12,4 +12,5 @@
     <string name="favourite">Избранное</string>
     <string name="author">Author</string>
     <string name="content">Content</string>
+    <string name="no_favourite_movies_yet">Любимых фильмов отсуствует</string>
 </resources>
