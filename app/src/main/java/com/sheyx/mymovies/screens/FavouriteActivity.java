@@ -1,5 +1,12 @@
 package com.sheyx.mymovies.screens;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -7,12 +14,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.sheyx.mymovies.R;
 import com.sheyx.mymovies.adapter.MovieAdapter;
@@ -25,6 +26,7 @@ import java.util.List;
 public class FavouriteActivity extends AppCompatActivity {
 
     private MovieAdapter movieAdapter;
+    private Boolean isElements = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,12 @@ public class FavouriteActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<FavouriteMovie> favouriteMovies) {
                 if (favouriteMovies != null) {
+                    isElements = true;
                     List<Movie> movieList = new ArrayList<>();
                     movieList.addAll(favouriteMovies);
                     movieAdapter.setMovies(movieList);
+                } else {
+                    isElements = false;
                 }
             }
         });
@@ -57,6 +62,11 @@ public class FavouriteActivity extends AppCompatActivity {
             }
         });
 
+        if (!isElements) {
+            findViewById(R.id.textViewNoFavouriteMovies).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.textViewNoFavouriteMovies).setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

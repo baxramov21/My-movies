@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    app:strokeColor="#F8F516"
+    app:strokeWidth="1dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    android:layout_margin="4dp">
 
     <ImageView
         android:id="@+id/small_movie_poster"
@@ -11,5 +15,5 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/movie_image" />
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
 
