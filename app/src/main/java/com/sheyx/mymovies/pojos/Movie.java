@@ -4,14 +4,12 @@ package com.sheyx.mymovies.pojos;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
 import com.sheyx.mymovies.converters.Converter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "list_of_movies")
-@TypeConverters(value = Converter.class)
 public class Movie {
 
     @PrimaryKey(autoGenerate = true)
@@ -22,9 +20,6 @@ public class Movie {
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
-//    @SerializedName("genre_ids")
-//    @Expose
-//    private List<Integer> genreIds = null;
     @SerializedName("id")
     @Expose
     private int id;
@@ -111,14 +106,6 @@ public class Movie {
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
     }
-
-//    public List<Integer> getGenreIds() {
-//        return genreIds;
-//    }
-//
-//    public void setGenreIds(List<Integer> genreIds) {
-//        this.genreIds = genreIds;
-//    }
 
     public int getId() {
         return id;

@@ -23,5 +23,4 @@ public interface ApiService {
 
     @GET("movie/{movie_id}/reviews?api_key=c04e9d2cd0bd48b727a09adffca7e5ef")
     Observable<ReviewResult> getReviewsResult(@Path("movie_id") String movieId, @Query("language") String language);
-
 }

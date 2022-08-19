@@ -52,11 +52,6 @@ public class Trailer {
     @Expose
     private String id;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-
     public Trailer(int unique_id, String iso6391, String iso31661, String name, String key, String site, Integer size, String type, Boolean official, String publishedAt, String id) {
         this.unique_id = unique_id;
         this.iso6391 = iso6391;
@@ -70,22 +65,6 @@ public class Trailer {
         this.publishedAt = publishedAt;
         this.id = id;
     }
-
-    /**
-     *
-     * @param site
-     * @param size
-     * @param publishedAt
-     * @param name
-     * @param iso31661
-     * @param official
-     * @param iso6391
-     * @param id
-     * @param type
-     * @param key
-     */
-
-
 
     @Ignore
     public Trailer(String iso6391, String iso31661, String name, String key, String site, Integer size, String type, Boolean official, String publishedAt, String id) {

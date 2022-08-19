@@ -8,18 +8,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.sheyx.mymovies.api.ApiFactory;
+import com.sheyx.mymovies.api.ApiService;
+import com.sheyx.mymovies.db.MoviesDatabase;
+import com.sheyx.mymovies.pojos.FavouriteMovie;
+import com.sheyx.mymovies.pojos.Movie;
+import com.sheyx.mymovies.pojos.Review;
+import com.sheyx.mymovies.pojos.Trailer;
+import com.sheyx.mymovies.pojos.TrailersResult;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import com.sheyx.mymovies.api.ApiFactory;
-import com.sheyx.mymovies.api.ApiService;
-import com.sheyx.mymovies.pojos.FavouriteMovie;
-import com.sheyx.mymovies.pojos.Review;
-import com.sheyx.mymovies.pojos.Trailer;
-import com.sheyx.mymovies.db.MoviesDatabase;
-import com.sheyx.mymovies.pojos.Movie;
-import com.sheyx.mymovies.pojos.TrailersResult;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -60,7 +60,6 @@ public class MovieViewModel extends AndroidViewModel {
         compositeDisposable = new CompositeDisposable();
         trailers = database.moviesDao().getTrailer();
         reviews = database.moviesDao().getReviews();
-
         apiFactory = ApiFactory.getInstance();
         apiService = apiFactory.getApiService();
     }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.sheyx.mymovies.R;
 import com.sheyx.mymovies.pojos.Movie;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +56,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MoviesViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MoviesViewHolder holder, int position) {
-        if (movies.size() >= 20 && position > movies.size() - 4 && onReachEndListener != null) {
+        if (movies.size() >= 20 && position >= movies.size() - 6 && onReachEndListener != null) {
             onReachEndListener.onReachEnd();
         }
         Movie movie = movies.get(position);
         String imageUrl = BASE_POSTER_URL + SMALL_POSTER_SIZE + movie.getPosterPath();
-//        Picasso.get().load(imageUrl).placeholder(R.drawable.landscape).into(holder.imageViewSmallPoster);
+//       Picasso.get().load(imageUrl).placeholder(R.drawable.landscape).into(holder.imageViewSmallPoster);
         Glide.with(context)
                 .load(imageUrl)
                 .placeholder(R.drawable.landscape)

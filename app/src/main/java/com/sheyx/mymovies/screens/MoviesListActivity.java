@@ -1,15 +1,9 @@
 package com.sheyx.mymovies.screens;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,27 +13,40 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sheyx.mymovies.R;
 import com.sheyx.mymovies.adapter.MovieAdapter;
 import com.sheyx.mymovies.pojos.Movie;
+import com.sheyx.mymovies.pojos.SearchResult;
+import com.sheyx.mymovies.screens.DetailActivity;
+import com.sheyx.mymovies.screens.FavouriteActivity;
+import com.sheyx.mymovies.screens.MovieViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MoviesListActivity extends AppCompatActivity {
-
-    private RecyclerView recyclerViewPosters;
-    private MovieAdapter movieAdapter;
     private Switch switchSort;
     private TextView textViewPopularity;
     private TextView textViewTopRated;
-    private MovieViewModel viewModel;
+    private SearchView searchView;
     private ProgressBar progressBarLoading;
 
-    private CompositeDisposable compositeDisposable;
+    private MovieViewModel viewModel;
+    private RecyclerView recyclerViewPosters;
+    private MovieAdapter movieAdapter;
     private int page = 1;
     private int methodOfSort;
     private boolean isLoading = false;
@@ -51,14 +58,6 @@ public class MoviesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movies_list_main);
-        SearchView searchView = findViewById(R.id.movieSearch);
-        searchView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchView.setIconifiedByDefault(false);
-            }
-        });
-        compositeDisposable = new CompositeDisposable();
         switchSort = findViewById(R.id.switchSort);
         textViewPopularity = findViewById(R.id.textViewMostPopular);
         textViewTopRated = findViewById(R.id.textViewTopRated);
@@ -114,9 +113,7 @@ public class MoviesListActivity extends AppCompatActivity {
         LiveData<List<Movie>> moviesFromLiveData = viewModel.getMovies();
         moviesFromLiveData.observe(this, movies -> {
             if (movies != null) {
-//                    if (page == 1) {
                 movieAdapter.clear();
-//                    }
                 movieAdapter.addMovies(movies);
                 page++;
             }
@@ -154,51 +151,6 @@ public class MoviesListActivity extends AppCompatActivity {
             startActivity(intent_to_favourite_activity);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-//    private void getMovies() {
-//        isLoading = true;
-//        progressBarLoading.setVisibility(View.VISIBLE);
-//
-//        ApiFactory apiFactory = ApiFactory.getInstance();
-//        ApiService apiService = apiFactory.getApiService();
-//        Disposable disposable = apiService.getMovieResult(lang,whichOne(methodOfSort), String.valueOf(page),VOTE_COUNT,AVERAGE_VOTE)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<MoviesResult>() {
-//                    @Override
-//                    public void accept(MoviesResult moviesResult) throws Exception {
-//                        ArrayList<Movie> movies = (ArrayList<Movie>) moviesResult.getMovies();
-//                        if (movies != null && !movies.isEmpty()) {
-//                            if (page == 1) {
-//                                viewModel.deleteAll();
-//                                movieAdapter.clear();
-//                            }
-//                            for (Movie movie :
-//                                    movies) {
-//                                viewModel.insertMovie(movie);
-//                            }
-//                            movieAdapter.addMovies(movies);
-//                            page++;
-//                        }
-//                        isLoading = false;
-//                        progressBarLoading.setVisibility(View.INVISIBLE);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        Toast.makeText(MainActivity.this, "Error bro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//        compositeDisposable.add(disposable);
-//    }
-
-    @Override
-    protected void onDestroy() {
-        if (compositeDisposable != null) {
-            compositeDisposable.dispose();
-        }
-        super.onDestroy();
     }
 
     private void methodOfSort(boolean isChecked) {

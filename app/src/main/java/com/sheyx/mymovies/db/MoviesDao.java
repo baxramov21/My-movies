@@ -4,11 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.sheyx.mymovies.pojos.FavouriteMovie;
 import com.sheyx.mymovies.pojos.Movie;
 import com.sheyx.mymovies.pojos.Review;
+import com.sheyx.mymovies.pojos.SearchResult;
 import com.sheyx.mymovies.pojos.Trailer;
 
 import java.util.List;
@@ -60,4 +62,17 @@ public interface MoviesDao {
 
     @Query("DELETE FROM trailers")
     void deleteAllTrailers();
+
+    @Query("SELECT * FROM list_of_movies WHERE title == :movieName")
+    Movie getMovieByName(String movieName);
+
+    @Query("SELECT * FROM search_result")
+    LiveData<SearchResult> getSearchResult();
+
+    @Insert()
+    void insertSearchResult(SearchResult result);
+
+    @Query("DELETE FROM search_result")
+    void deleteSearchResult();
+
 }

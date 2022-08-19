@@ -24,9 +24,6 @@ public class Review {
     @SerializedName("author")
     @Expose
     private String author;
-//    @SerializedName("author_details")
-//    @Expose
-//    private AuthorDetails authorDetails;
     @SerializedName("content")
     @Expose
     private String content;
@@ -60,24 +57,9 @@ public class Review {
         this.url = url;
     }
 
-    /**
-     * 
-     * @param createdAt
-     * @param author
-     * @param authorDetails
-     * @param id
-     * @param content
-     * @param url
-     * @param updatedAt
-     */
-
-
-
     @Ignore
     public Review(String author, AuthorDetails authorDetails, String content, String createdAt, String id, String updatedAt, String url) {
         super();
-//        this.author = author;
-//        this.authorDetails = authorDetails;
         this.content = content;
         this.createdAt = createdAt;
         this.id = id;
@@ -92,14 +74,6 @@ public class Review {
     public void setAuthor(String author) {
         this.author = author;
     }
-//
-//    public AuthorDetails getAuthorDetails() {
-//        return authorDetails;
-//    }
-//
-//    public void setAuthorDetails(AuthorDetails authorDetails) {
-//        this.authorDetails = authorDetails;
-//    }
 
     public String getContent() {
         return content;

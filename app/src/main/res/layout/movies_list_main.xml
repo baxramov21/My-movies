@@ -7,18 +7,6 @@
     android:background="@color/black"
     tools:context=".screens.MoviesListActivity">
 
-    <SearchView
-        android:id="@+id/movieSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:queryHint="Type movie name that you want to find"
-        android:textAlignment="center"
-        app:iconifiedByDefault="false"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Switch
         android:id="@+id/switchSort"
         android:layout_width="wrap_content"
@@ -26,7 +14,7 @@
         android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/movieSearch"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <TextView
