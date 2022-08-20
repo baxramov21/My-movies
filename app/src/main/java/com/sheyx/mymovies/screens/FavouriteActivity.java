@@ -26,7 +26,6 @@ import java.util.List;
 public class FavouriteActivity extends AppCompatActivity {
 
     private MovieAdapter movieAdapter;
-    private Boolean isElements = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +41,12 @@ public class FavouriteActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<FavouriteMovie> favouriteMovies) {
                 if (favouriteMovies != null) {
-                    isElements = true;
+                    movieAdapter.clear();
                     List<Movie> movieList = new ArrayList<>();
                     movieList.addAll(favouriteMovies);
                     movieAdapter.setMovies(movieList);
-                } else {
-                    isElements = false;
                 }
+                checkAreFavouriteFilmsExists();
             }
         });
 
@@ -56,13 +54,16 @@ public class FavouriteActivity extends AppCompatActivity {
             @Override
             public void onPosterClick(int position) {
                 Movie clickedMovie = movieAdapter.getMovies().get(position);
-                Intent intentToMovieDetail = new Intent(FavouriteActivity.this , DetailActivity.class);
+                Intent intentToMovieDetail = new Intent(FavouriteActivity.this, DetailActivity.class);
                 intentToMovieDetail.putExtra("ID", clickedMovie.getId());
                 startActivity(intentToMovieDetail);
             }
         });
+        checkAreFavouriteFilmsExists();
+    }
 
-        if (!isElements) {
+    private void checkAreFavouriteFilmsExists() {
+        if (movieAdapter.getItemCount() <= 0) {
             findViewById(R.id.textViewNoFavouriteMovies).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.textViewNoFavouriteMovies).setVisibility(View.INVISIBLE);
@@ -71,7 +72,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =  getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
