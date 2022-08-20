@@ -12,9 +12,11 @@
         android:theme="@style/Theme.MyMovies">
         <activity
             android:name="com.sheyx.mymovies.screens.FavouriteActivity"
+            android:label="Любимые фильмы"
             android:exported="false" />
         <activity
             android:name="com.sheyx.mymovies.screens.DetailActivity"
+            android:label="Подробно о фильме"
             android:exported="false" />
         <activity
             android:name="com.sheyx.mymovies.screens.MoviesListActivity"
