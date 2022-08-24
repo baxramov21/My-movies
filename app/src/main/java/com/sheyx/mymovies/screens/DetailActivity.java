@@ -90,9 +90,9 @@ public class DetailActivity extends AppCompatActivity {
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         trailerAdapter = new TrailerAdapter();
         trailerAdapter.setTrailers(trailerArrayList);
-
-        viewModel.deleteReviews();
+        
         viewModel.deleteTrailers();
+        viewModel.deleteReviews();
 
         LiveData<List<Trailer>> trailers = viewModel.getTrailers();
         trailers.observe(this, movieTrailersList -> {
