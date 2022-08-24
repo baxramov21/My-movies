@@ -90,7 +90,7 @@ public class DetailActivity extends AppCompatActivity {
         recyclerViewTrailers.setLayoutManager(new LinearLayoutManager(this));
         trailerAdapter = new TrailerAdapter();
         trailerAdapter.setTrailers(trailerArrayList);
-
+        
         viewModel.deleteTrailers();
         viewModel.deleteReviews();
 
