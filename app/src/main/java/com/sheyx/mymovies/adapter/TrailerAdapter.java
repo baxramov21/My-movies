@@ -29,6 +29,11 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.Trailers
         return new TrailersViewholder(view);
     }
 
+    public void clear() {
+        trailers.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull TrailersViewholder holder, int position) {
         Trailer currentTrailer = trailers.get(position);
