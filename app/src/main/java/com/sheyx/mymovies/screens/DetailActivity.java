@@ -1,5 +1,17 @@
 package com.sheyx.mymovies.screens;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -8,27 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sheyx.mymovies.R;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.sheyx.mymovies.adapter.ReviewAdapter;
 import com.sheyx.mymovies.adapter.TrailerAdapter;
-import com.sheyx.mymovies.api.ApiFactory;
-import com.sheyx.mymovies.api.ApiService;
 import com.sheyx.mymovies.pojos.FavouriteMovie;
-import com.sheyx.mymovies.pojos.Review;
 import com.sheyx.mymovies.pojos.Movie;
-
+import com.sheyx.mymovies.pojos.Review;
 import com.sheyx.mymovies.pojos.Trailer;
 import com.squareup.picasso.Picasso;
 
@@ -45,16 +41,13 @@ public class DetailActivity extends AppCompatActivity {
     private ScrollView scrollViewInfo;
 
     private int ID;
-    private Movie currentMovie;
     private FavouriteMovie favouriteMovie;
+    private Movie currentMovie;
     private MovieViewModel viewModel;
+    private FavouriteMoviesViewModel favouriteMoviesViewModel;
 
-    private String lang;
     private static final String BASE_POSTER_URL = "https://image.tmdb.org/t/p/";
     private static final String BIG_POSTER_SIZE = "w780";
-
-    private  ApiFactory apiFactory;
-    private ApiService apiService;
 
     private TrailerAdapter trailerAdapter;
 
@@ -63,18 +56,16 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-         apiFactory = ApiFactory.getInstance();
-         apiService = apiFactory.getApiService();
-
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         imageViewAddToFavourite = findViewById(R.id.imageViewAddToFavourite);
         tv_originalTitle = findViewById(R.id.textViewOriginalTitle);
         tv_title = findViewById(R.id.textViewTitle);
         tv_rating = findViewById(R.id.textViewRating);
-        lang = Locale.getDefault().getLanguage();
         tv_overview = findViewById(R.id.textViewOverView);
         tv_realise_date = findViewById(R.id.textViewDateOfRealise);
         scrollViewInfo = findViewById(R.id.scrollViewInfo);
+        favouriteMoviesViewModel = ViewModelProviders.of(this).get(FavouriteMoviesViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
         Intent intent_from_MA = getIntent();
         if (intent_from_MA != null && intent_from_MA.hasExtra("ID")) {
@@ -82,16 +73,16 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             finish();
         }
-        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
-
         currentMovie = viewModel.getMovieById(ID);
+
+        addToFavourite(); // <----
+
         Picasso.get().load(BASE_POSTER_URL + BIG_POSTER_SIZE + currentMovie.getPosterPath()).placeholder(R.drawable.landscape).into(imageViewBigPoster);
         tv_originalTitle.setText(currentMovie.getOriginalTitle());
         tv_title.setText(currentMovie.getTitle());
         tv_overview.setText(currentMovie.getOverview());
         tv_rating.setText(String.format(Locale.getDefault(), "%s", currentMovie.getVoteAverage()));
         tv_realise_date.setText(currentMovie.getReleaseDate());
-        favouriteAddTo();
         ArrayList<Trailer> trailerArrayList = new ArrayList<>();
         recyclerViewReviews = findViewById(R.id.recyclerview_reviews);
         recyclerViewTrailers = findViewById(R.id.recycler_view_trailers);
@@ -100,17 +91,20 @@ public class DetailActivity extends AppCompatActivity {
         trailerAdapter = new TrailerAdapter();
         trailerAdapter.setTrailers(trailerArrayList);
 
-        LiveData<List<Trailer>> trailers =  viewModel.getTrailers();
-        trailers.observe(this, trailers12 -> {
-            ArrayList<Trailer> trailers1 = (ArrayList<Trailer>) trailers12;
-            recyclerViewTrailers.setAdapter(trailerAdapter);
-                    trailerAdapter.setTrailers(trailers1);
+        viewModel.deleteReviews();
+        viewModel.deleteTrailers();
 
-                    trailerAdapter.setOnClickPlayVideo(url -> {
-                        Intent intent = new Intent(Intent.ACTION_VIEW,  Uri.parse( "https://www.youtube.com/watch?v=" + url));
-                        Log.d("url","https://www.youtube.com/watch?v=" + url);
-                        startActivity(intent);
-                    });
+        LiveData<List<Trailer>> trailers = viewModel.getTrailers();
+        trailers.observe(this, movieTrailersList -> {
+            ArrayList<Trailer> trailers1 = (ArrayList<Trailer>) movieTrailersList;
+            recyclerViewTrailers.setAdapter(trailerAdapter);
+            trailerAdapter.setTrailers(trailers1);
+
+            trailerAdapter.setOnClickPlayVideo(url -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + url));
+                Log.d("url", "https://www.youtube.com/watch?v=" + url);
+                startActivity(intent);
+            });
         });
 
         LiveData<List<Review>> reviews = viewModel.getReviews();
@@ -121,11 +115,14 @@ public class DetailActivity extends AppCompatActivity {
             reviewAdapter.setTrailers(reviews2);
         });
 
-        viewModel.downloadTrailers(currentMovie.getId(),lang);
-        viewModel.downloadReviews(currentMovie.getId(),lang);
+        viewModel.downloadTrailers(currentMovie.getId());
+        viewModel.downloadReviews(currentMovie.getId());
         scrollViewInfo.smoothScrollTo(0, 0);
-    }
 
+        imageViewAddToFavourite.setOnClickListener(view -> {
+            onClickChangeFavourite();
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,29 +134,29 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        Class activityName;
         if (id == R.id.main_movies_menu_item) {
-            Intent intent_to_MA = new Intent(this, MoviesListActivity.class);
-            startActivity(intent_to_MA);
+            activityName = MoviesListActivity.class;
         } else {
-            Intent intent_to_favourite_activity = new Intent(this, FavouriteActivity.class);
-            startActivity(intent_to_favourite_activity);
+            activityName = FavouriteActivity.class;
         }
+        startActivity(new Intent(this, activityName));
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickChangeFavourite(View view) {
+    public void onClickChangeFavourite() {
         if (favouriteMovie == null) {
-            viewModel.insertFavouriteMovie(new FavouriteMovie(currentMovie));
+            favouriteMoviesViewModel.insertFavouriteMovie(new FavouriteMovie(currentMovie));
             Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_SHORT).show();
         } else {
-            viewModel.deleteFavouriteMovie(favouriteMovie);
+            favouriteMoviesViewModel.deleteFavouriteMovie(favouriteMovie);
             Toast.makeText(this, "Удалено из избраного", Toast.LENGTH_SHORT).show();
         }
-        favouriteAddTo();
+        addToFavourite();
     }
 
-    private void favouriteAddTo() {
-        favouriteMovie = viewModel.getFavouriteMovieById(ID);
+    private void addToFavourite() {
+        favouriteMovie = favouriteMoviesViewModel.getFavouriteMovieById(ID);
         if (favouriteMovie == null) {
             imageViewAddToFavourite.setImageResource(android.R.drawable.btn_star_big_off);
         } else {

@@ -35,8 +35,8 @@ public class FavouriteActivity extends AppCompatActivity {
         movieAdapter = new MovieAdapter(this);
         rv_favourite_movies.setLayoutManager(new GridLayoutManager(this, 2));
         rv_favourite_movies.setAdapter(movieAdapter);
-        MovieViewModel viewModelMovies = ViewModelProviders.of(this).get(MovieViewModel.class);
-        LiveData<List<FavouriteMovie>> movies = viewModelMovies.getFavouriteMovies();
+        FavouriteMoviesViewModel favouriteMoviesViewModel = ViewModelProviders.of(this).get(FavouriteMoviesViewModel.class);
+        LiveData<List<FavouriteMovie>> movies = favouriteMoviesViewModel.getFavouriteMovies();
         movies.observe(this, new Observer<List<FavouriteMovie>>() {
             @Override
             public void onChanged(List<FavouriteMovie> favouriteMovies) {
