@@ -3,6 +3,7 @@ package com.sheyx.mymovies.screens;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -60,6 +61,8 @@ public class MoviesListActivity extends AppCompatActivity {
 
         movieAdapter.setOnReachEndListener(() -> {
             if (!isLoading) {
+                Log.d("test", "good");
+                Log.d("test",movieAdapter.getItemCount() + "");
                 progressBarLoading.setVisibility(View.VISIBLE);
                 page++;
                 viewModel.downloadMovies(methodOfSort, page);

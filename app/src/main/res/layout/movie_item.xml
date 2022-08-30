@@ -6,9 +6,12 @@
     app:strokeWidth="1dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardUseCompatPadding="true"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="4dp"
     android:layout_margin="4dp">
 
     <ImageView
+        android:src="@drawable/landscape"
         android:id="@+id/small_movie_poster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
