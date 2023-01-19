@@ -11,4 +11,7 @@ Tech stack: Android SDK, Java, Retrofit2, Gson, RxJava, MVVM, Picasso, XML and e
 ![movies_film_info](https://user-images.githubusercontent.com/96684932/213441777-a6e184af-4469-44d5-938b-45abb7aae9a5.png)
 ![movie_review](https://user-images.githubusercontent.com/96684932/213441867-54bc0ff8-a76b-40a3-8ec9-e71403dd7f2b.png) 
 
+
+
+
 ![image_2023-01-19_17-23-12](https://user-images.githubusercontent.com/96684932/213442325-51fedfe1-5c4d-4a56-9613-e722de490b21.png)
